@@ -75,7 +75,7 @@ class PlayState extends FlxState
 
 		offsets = coolTextFile(File.data('stage'));
 		sizes = coolTextFile(File.data('size'));
-		// nalaSettings = coolTextFile(File.data('nalaSettings'));
+		nalaSettings = coolTextFile(File.data('nalaSettings'));
 
 		if (nalaRandom == 0)
 		{

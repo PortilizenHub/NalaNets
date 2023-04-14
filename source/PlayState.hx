@@ -1,5 +1,6 @@
 package;
 
+import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
@@ -56,6 +57,8 @@ class PlayState extends FlxState
 		offsets = coolTextFile(File.data('stage'));
 		sizes = coolTextFile(File.data('size'));
 
+		// net.animation.play(Std.string(mouseOverlapObject(floor) || mouseOverlapObject(counch)));
+
 		super.update(elapsed);
 	}
 
@@ -71,5 +74,10 @@ class PlayState extends FlxState
 		}
 
 		return daList;
+	}
+
+	public function mouseOverlapObject(obj:FlxBasic)
+	{
+		return net.overlaps(obj);
 	}
 }

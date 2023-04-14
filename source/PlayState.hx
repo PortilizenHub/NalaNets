@@ -12,10 +12,14 @@ class PlayState extends FlxState
 	var net:FlxSprite;
 	var counch:FlxSprite;
 
+	var offsets:Array<String> = coolTextFile(File.data('stage'));
+
 	var pixelZoom:Int = 4;
 
 	override public function create()
 	{
+		trace(offsets);
+
 		counch = new FlxSprite(120, 540).loadGraphic(File.image('counch'));
 		counch.setGraphicSize(Std.int(counch.width * pixelZoom), Std.int(counch.height * pixelZoom));
 		add(counch);

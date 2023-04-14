@@ -1,32 +1,33 @@
 package;
 
+using StringTools;
+
 class File
 {
-	public function getFile(file:String, type:String, folder:String)
+	public static function getFile(file:String, type:String, folder:String)
 	{
-		if (folder.length > 0)
-			folder += '/';
+		trace('assets/$folder$file.$type');
 
 		return 'assets/$folder$file.$type';
 	}
 
-	public function data(file:String, ?type:String = '.txt', ?folder:String)
+	public static function data(file:String, ?type:String = 'txt', ?folder:String = 'data/')
 	{
-		return getFile(file, type, 'data/$folder');
+		return getFile(file, type, '$folder');
 	}
 
-	public function image(file:String, ?folder:String)
+	public static function image(file:String, ?folder:String = 'images/')
 	{
-		return getFile(file, '.png', 'images/$folder');
+		return getFile(file, 'png', '$folder');
 	}
 
-	public function sound(file:String, ?folder:String)
+	public static function sound(file:String, ?folder:String = 'sounds/')
 	{
-		return getFile(file, '.wav', 'sounds/$folder');
+		return getFile(file, 'wav', '$folder');
 	}
 
-	public function music(file:String, ?folder:String)
+	public function music(file:String, ?folder:String = 'music/')
 	{
-		return getFile(file, '.wav', 'music/$folder');
+		return getFile(file, 'wav', '$folder');
 	}
 }

@@ -20,7 +20,7 @@ class PlayState extends FlxState
 	{
 		trace(offsets);
 
-		counch = new FlxSprite(120, 540).loadGraphic(File.image('counch'));
+		counch = new FlxSprite(Std.parseFloat(offsets[0]), Std.parseFloat(offsets[1])).loadGraphic(File.image('counch'));
 		counch.setGraphicSize(Std.int(counch.width * pixelZoom), Std.int(counch.height * pixelZoom));
 		add(counch);
 

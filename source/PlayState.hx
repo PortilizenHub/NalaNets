@@ -35,6 +35,7 @@ class PlayState extends FlxState
 	{
 		FlxG.mouse.visible = false;
 		net.setPosition(FlxG.mouse.x, FlxG.mouse.y);
+		counch.setPosition(Std.parseFloat(offsets[0]), Std.parseFloat(offsets[1]));
 
 		offsets = coolTextFile(File.data('stage'));
 

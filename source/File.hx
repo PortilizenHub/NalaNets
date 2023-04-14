@@ -6,7 +6,7 @@ class File
 {
 	public static function getFile(file:String, type:String, folder:String)
 	{
-		trace('assets/$folder$file.$type');
+		// trace('assets/$folder$file.$type');
 
 		return 'assets/$folder$file.$type';
 	}

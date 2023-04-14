@@ -79,6 +79,7 @@ class PlayState extends FlxState
 
 		if (nalaRandom == 0)
 		{
+			nala.flipX = false;
 			nala.animation.play('jump');
 
 			FlxTween.tween(nala, {x: 420, y: 266}, 0.8);
@@ -90,6 +91,9 @@ class PlayState extends FlxState
 		else if (nalaRandom == 1)
 		{
 			nala.animation.play('jump');
+
+			if (nala.x == 420 && nala.y == 266)
+				nala.flipX = true;
 
 			FlxTween.tween(nala, {x: Std.parseFloat(nalaSettings[1]), y: Std.parseFloat(nalaSettings[2])}, 0.8);
 

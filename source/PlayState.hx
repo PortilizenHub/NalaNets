@@ -14,6 +14,8 @@ class PlayState extends FlxState
 	var counch:FlxSprite;
 	var floor:FlxSprite;
 
+	var nala:FlxSprite;
+
 	var offsets:Array<String> = coolTextFile(File.data('stage'));
 	var sizes:Array<String> = coolTextFile(File.data('size'));
 
@@ -37,6 +39,12 @@ class PlayState extends FlxState
 		net = new FlxSprite(FlxG.mouse.x, FlxG.mouse.y).loadGraphic(File.image('net'));
 		net.setGraphicSize(Std.int(net.width * pixelZoom), Std.int(net.height * pixelZoom));
 		add(net);
+
+		nala = new FlxSprite(counch.x, counch.y).loadGraphic(File.image('nala'), true, 16, 16);
+		nala.animation.add('idle', [0]);
+		nala.setGraphicSize(Std.int(nala.width * pixelZoom), Std.int(nala.height * pixelZoom));
+		nala.animation.play('idle');
+		add(nala);
 
 		super.create();
 	}

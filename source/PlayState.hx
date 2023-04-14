@@ -3,6 +3,9 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import openfl.Assets;
+
+using StringTools;
 
 class PlayState extends FlxState
 {
@@ -30,5 +33,19 @@ class PlayState extends FlxState
 		net.setPosition(FlxG.mouse.x, FlxG.mouse.y);
 
 		super.update(elapsed);
+	}
+
+	// taken from friday night funkin
+	// thank you ninjamuffin99
+	public static function coolTextFile(path:String):Array<String>
+	{
+		var daList:Array<String> = Assets.getText(path).trim().split('\n');
+
+		for (i in 0...daList.length)
+		{
+			daList[i] = daList[i].trim();
+		}
+
+		return daList;
 	}
 }

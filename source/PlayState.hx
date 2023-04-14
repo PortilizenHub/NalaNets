@@ -4,6 +4,7 @@ import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.tweens.FlxTween;
 import openfl.Assets;
 
 using StringTools;
@@ -21,6 +22,8 @@ class PlayState extends FlxState
 	var nalaSettings:Array<String> = coolTextFile(File.data('nalaSettings'));
 
 	var pixelZoom:Int = 4;
+
+	var nalaRandom:Int = 0;
 
 	override public function create()
 	{
@@ -41,6 +44,7 @@ class PlayState extends FlxState
 		// the x and y is the START positions
 		nala = new FlxSprite(Std.parseFloat(nalaSettings[1]), Std.parseFloat(nalaSettings[2])).loadGraphic(File.image('nala'), true, 16, 16);
 		nala.animation.add('idle', [0]);
+		nala.animation.add('jump', [1]);
 		nala.setGraphicSize(Std.int(nala.width * (pixelZoom + Std.parseFloat(nalaSettings[0]))),
 			Std.int(nala.height * (pixelZoom + Std.parseFloat(nalaSettings[0]))));
 		nala.animation.play('idle');
@@ -66,11 +70,35 @@ class PlayState extends FlxState
 		counch.setGraphicSize(Std.int(counch.width * (pixelZoom + Std.int(Std.parseFloat(sizes[0])))),
 			Std.int(counch.height * (pixelZoom + Std.int(Std.parseFloat(sizes[0])))));
 
-		nala.setPosition(Std.parseFloat(nalaSettings[1]), Std.parseFloat(nalaSettings[2]));
+		nala.setGraphicSize(Std.int(nala.width * (pixelZoom + Std.parseFloat(nalaSettings[0]))),
+			Std.int(nala.height * (pixelZoom + Std.parseFloat(nalaSettings[0]))));
 
 		offsets = coolTextFile(File.data('stage'));
 		sizes = coolTextFile(File.data('size'));
-		nalaSettings = coolTextFile(File.data('nalaSettings'));
+		// nalaSettings = coolTextFile(File.data('nalaSettings'));
+
+		if (nalaRandom == 0)
+		{
+			nala.animation.play('jump');
+
+			FlxTween.tween(nala, {x: 420, y: 266}, 0.8);
+
+			nala.animation.play('idle');
+
+			nalaRandom = 1;
+		}
+		else if (nalaRandom == 1)
+		{
+			nala.animation.play('jump');
+
+			FlxTween.tween(nala, {x: Std.parseFloat(nalaSettings[1]), y: Std.parseFloat(nalaSettings[2])}, 0.8);
+
+			nala.animation.play('idle');
+
+			nalaRandom = 3;
+		}
+		else
+			nalaRandom = 0;
 
 		// net.animation.play(Std.string(mouseOverlapObject(floor) || mouseOverlapObject(counch)));
 
@@ -91,6 +119,7 @@ class PlayState extends FlxState
 		return daList;
 	}
 
+	// this is unused to to not working
 	public function mouseOverlapObject(obj:FlxBasic)
 	{
 		return net.overlaps(obj);

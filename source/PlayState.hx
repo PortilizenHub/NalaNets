@@ -4,6 +4,7 @@ import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
 import openfl.Assets;
@@ -11,7 +12,6 @@ import openfl.Assets;
 using StringTools;
 
 #if !web
-import flixel.group.FlxGroup.FlxTypedGroup;
 import sys.FileSystem;
 import sys.io.File as SysFile;
 #end
@@ -33,9 +33,7 @@ class PlayState extends FlxState
 	var sizes:Array<String> = coolTextFile(File.data('size'));
 	var nalaSettings:Array<String> = coolTextFile(File.data('nalaSettings'));
 	var scoreFile:Array<String> = coolTextFile(File.data('scoreSettings'));
-	#if !web
-	var stageAssets:Array<String> = FileSystem.readDirectory('assets/images/stage');
-	#end
+	var stageAssets:Array<String> = #if !web FileSystem.readDirectory('assets/images/stage'); #else ['counch.png', 'floor.png', 'background.png']; #end
 
 	var pressedNala:Bool = false;
 
@@ -56,9 +54,7 @@ class PlayState extends FlxState
 		trace(sizes);
 		trace(nalaSettings);
 		trace(scoreFile);
-		#if !web
 		trace(stageAssets);
-		#end
 
 		backgroundGrp = new FlxTypedGroup<FlxSprite>();
 
@@ -213,6 +209,8 @@ class PlayState extends FlxState
 			}
 
 			setPosition(nala, scoreFiles(0), scoreFiles(1));
+			#else
+			setPosition(nala, 0, 0);
 			#end
 
 			nala.animation.play('idle');

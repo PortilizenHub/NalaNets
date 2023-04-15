@@ -138,7 +138,7 @@ class PlayState extends FlxState
 					timer = 60;
 					score++;
 
-					if (score > highScore)
+					if (score < highScore)
 						highScore = score;
 				}
 			}
@@ -154,6 +154,9 @@ class PlayState extends FlxState
 		{
 			canReset = true;
 
+			if (score < highScore)
+				highScore = score;
+
 			if (FileSystem.exists('assets/data'))
 			{
 				SysFile.saveContent('assets/data/scoreSettings.txt', Std.string(nala.x + '\n' + nala.y + '\n' + highScore));
@@ -161,9 +164,6 @@ class PlayState extends FlxState
 
 			nala.setPosition(Std.parseFloat(scoreFile[0]), Std.parseFloat(scoreFile[1]));
 			nala.animation.play('idle');
-
-			if (score > highScore)
-				highScore = score;
 
 			if (canReset)
 			{

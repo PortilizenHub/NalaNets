@@ -31,7 +31,7 @@
 
 	<set name="BUILD_DIR" value="export" />
 
-	<assets path="MODDING_DOCUMENTATION" rename="mod_doc" />
+	<assets path="MODDING_DOCUMENTATION.md" rename="mod_doc.md" />
 
 	<source path="source" />
 	<assets path="assets" />

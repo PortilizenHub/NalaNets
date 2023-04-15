@@ -41,7 +41,7 @@ class PlayState extends FlxState
 
 	var nalaRandom:Int = 0;
 
-	var highScore:Int = 0;
+	var highScore:Int = 100000000000000000000000;
 	var score:Int = 0;
 	var timer:Int = 60;
 	var timerXX:Int = 120;
@@ -137,9 +137,6 @@ class PlayState extends FlxState
 				{
 					timer = 60;
 					score++;
-
-					if (score < highScore)
-						highScore = score;
 				}
 			}
 

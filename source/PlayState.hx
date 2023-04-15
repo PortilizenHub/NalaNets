@@ -6,14 +6,11 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
-import flixel.util.FlxTimer;
-import haxe.Json;
 import openfl.Assets;
 
 using StringTools;
 
 #if !web
-import openfl.net.FileReference;
 import sys.FileSystem;
 import sys.io.File as SysFile;
 #end

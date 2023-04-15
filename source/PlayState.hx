@@ -54,29 +54,22 @@ class PlayState extends FlxState
 		trace(scoreFile);
 
 		if (scoreFile[2] != null)
-			highScore = Std.int(Std.parseFloat(scoreFile[2]));
+			highScore = Std.int(scoreFiles(2));
 
-		floor = new FlxSprite(Std.parseFloat(offsets[2]), Std.parseFloat(offsets[3])).loadGraphic(File.image('floor'));
-		floor.setGraphicSize(Std.int(floor.width * (pixelZoom + Std.int(Std.parseFloat(sizes[1])))),
-			Std.int(floor.height * (pixelZoom + Std.int(Std.parseFloat(sizes[1])))));
+		floor = new FlxSprite().loadGraphic(File.image('floor'));
 		add(floor);
 
-		counch = new FlxSprite(Std.parseFloat(offsets[0]), Std.parseFloat(offsets[1])).loadGraphic(File.image('counch'));
-		counch.setGraphicSize(Std.int(counch.width * (pixelZoom + Std.int(Std.parseFloat(sizes[0])))),
-			Std.int(counch.height * (pixelZoom + Std.int(Std.parseFloat(sizes[0])))));
+		counch = new FlxSprite().loadGraphic(File.image('counch'));
 		add(counch);
 
 		// the x and y is the START positions
-		nala = new FlxSprite(Std.parseFloat(nalaSettings[1]), Std.parseFloat(nalaSettings[2])).loadGraphic(File.image('nala'), true, 16, 16);
+		nala = new FlxSprite(nalaSetting(1), nalaSetting(2)).loadGraphic(File.image('nala'), true, 16, 16);
 		nala.animation.add('idle', [0]);
 		nala.animation.add('jump', [1]);
-		nala.setGraphicSize(Std.int(nala.width * (pixelZoom + Std.parseFloat(nalaSettings[0]))),
-			Std.int(nala.height * (pixelZoom + Std.parseFloat(nalaSettings[0]))));
 		nala.animation.play('idle');
 		add(nala);
 
 		net = new FlxSprite(FlxG.mouse.x, FlxG.mouse.y).loadGraphic(File.image('net'));
-		net.setGraphicSize(Std.int(net.width * pixelZoom), Std.int(net.height * pixelZoom));
 		add(net);
 
 		#if !web
@@ -106,25 +99,22 @@ class PlayState extends FlxState
 		scoreT.text = Std.string(score);
 
 		FlxG.mouse.visible = false;
-		net.setPosition(FlxG.mouse.x, FlxG.mouse.y);
+		setPosition(net, FlxG.mouse.x, FlxG.mouse.y);
 
-		floor.setPosition(Std.parseFloat(offsets[2]), Std.parseFloat(offsets[3]));
-		floor.setGraphicSize(Std.int(floor.width * (pixelZoom + Std.int(Std.parseFloat(sizes[1])))),
-			Std.int(floor.height * (pixelZoom + Std.int(Std.parseFloat(sizes[1])))));
+		setSize(net, 0);
 
-		counch.setPosition(Std.parseFloat(offsets[0]), Std.parseFloat(offsets[1]));
-		counch.setGraphicSize(Std.int(counch.width * (pixelZoom + Std.int(Std.parseFloat(sizes[0])))),
-			Std.int(counch.height * (pixelZoom + Std.int(Std.parseFloat(sizes[0])))));
+		setPosition(floor, offset(2), offset(3));
+		setSize(floor, size(1));
 
-		nala.setGraphicSize(Std.int(nala.width * (pixelZoom + Std.parseFloat(nalaSettings[0]))),
-			Std.int(nala.height * (pixelZoom + Std.parseFloat(nalaSettings[0]))));
+		setPosition(counch, offset(), offset(1));
+		setSize(counch, size(0));
 
-		#if !web
-		offsets = coolTextFile(File.data('stage'));
-		sizes = coolTextFile(File.data('size'));
-		nalaSettings = coolTextFile(File.data('nalaSettings'));
-		scoreFile = coolTextFile(File.data('scoreSettings'));
-		#end
+		setSize(nala, nalaSetting(0));
+
+		offsets = readFile('stage');
+		sizes = readFile('size');
+		nalaSettings = readFile('nalaSettings');
+		scoreFile = readFile('scoreSettings');
 
 		if (!pressedNala)
 		{
@@ -132,21 +122,10 @@ class PlayState extends FlxState
 
 			pressedNala = FlxG.mouse.pressed && mouseOverlapObject(nala);
 
-			timerXX--;
+			time()
+			l
 
-			if (timerXX > 1)
-			{
-				timerXX = 120;
-				timer--;
-
-				if (timer > 1)
-				{
-					timer = 60;
-					score++;
-				}
-			}
-
-			FlxTween.tween(nala, {x: FlxG.random.int(0, FlxG.width), y: Std.parseFloat(nalaSettings[2])}, FlxG.random.float(0.1, 2), {
+			FlxTween.tween(nala, {x: FlxG.random.int(0, FlxG.width), y: nalaSetting(2)}, FlxG.random.float(0.1, 2), {
 				onComplete: function(twn:FlxTween)
 				{
 					nala.animation.play('idle');
@@ -167,7 +146,7 @@ class PlayState extends FlxState
 			}
 			#end
 
-			nala.setPosition(Std.parseFloat(scoreFile[0]), Std.parseFloat(scoreFile[1]));
+			setPosition(nala, scoreFiles(0), scoreFiles(1));
 			nala.animation.play('idle');
 
 			if (canReset)
@@ -197,5 +176,67 @@ class PlayState extends FlxState
 	public function mouseOverlapObject(obj:FlxBasic)
 	{
 		return net.overlaps(obj);
+	}
+
+	public function setPosition(obj:FlxSprite, x:Dynamic, y:Dynamic)
+	{
+		obj.setPosition(x, y);
+	}
+
+	public function offset(itemValue:Int = 0)
+	{
+		return turnToFloat(arrayValue(offsets, itemValue));
+	}
+
+	public function size(itemValue:Int = 0)
+	{
+		return turnToFloat(arrayValue(sizes, itemValue));
+	}
+
+	public function nalaSetting(itemValue:Int = 0)
+	{
+		return turnToFloat(arrayValue(nalaSettings, itemValue));
+	}
+
+	public function scoreFiles(itemValue:Int = 0)
+	{
+		return turnToFloat(arrayValue(scoreFile, itemValue));
+	}
+
+	public function arrayValue(array:Array<Dynamic>, value:Int = 0)
+	{
+		return array[value];
+	}
+
+	public function turnToFloat(value:Dynamic)
+	{
+		return Std.parseFloat(value);
+	}
+
+	public function setSize(obj:FlxSprite, addSize:Dynamic)
+	{
+		obj.setGraphicSize(Std.int(obj.width * (pixelZoom + addSize)), Std.int(obj.height * (pixelZoom + addSize)));
+	}
+
+	public function readFile(file:String)
+	{
+		return coolTextFile(File.data(file));
+	}
+
+	public function time()
+	{
+		timerXX--;
+
+		if (timerXX > 1)
+		{
+			timerXX = 120;
+			timer--;
+
+			if (timer > 1)
+			{
+				timer = 60;
+				score++;
+			}
+		}
 	}
 }

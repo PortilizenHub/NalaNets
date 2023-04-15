@@ -11,15 +11,16 @@ import openfl.Assets;
 using StringTools;
 
 #if !web
+import flixel.group.FlxGroup.FlxTypedGroup;
 import sys.FileSystem;
 import sys.io.File as SysFile;
 #end
 
 class PlayState extends FlxState
 {
+	var backgroundGrp:FlxTypedGroup<FlxSprite>;
+
 	var net:FlxSprite;
-	var counch:FlxSprite;
-	var floor:FlxSprite;
 
 	var nala:FlxSprite;
 
@@ -32,6 +33,9 @@ class PlayState extends FlxState
 	var sizes:Array<String> = coolTextFile(File.data('size'));
 	var nalaSettings:Array<String> = coolTextFile(File.data('nalaSettings'));
 	var scoreFile:Array<String> = coolTextFile(File.data('scoreSettings'));
+	#if !web
+	var stageAssets:Array<String> = FileSystem.readDirectory('assets/images/stage');
+	#end
 
 	var pressedNala:Bool = false;
 
@@ -52,17 +56,56 @@ class PlayState extends FlxState
 		trace(sizes);
 		trace(nalaSettings);
 		trace(scoreFile);
+		#if !web
+		trace(stageAssets);
+		#end
+
+		backgroundGrp = new FlxTypedGroup<FlxSprite>();
 
 		if (scoreFile[2] != null)
 			highScore = Std.int(scoreFiles(2));
 
-		floor = new FlxSprite().loadGraphic(File.image('floor'));
-		add(floor);
+		for (i in 0...stageAssets.length)
+		{
+			var animated:Bool = false;
+			var asset:String = stageAssets[i];
+			asset.split('.png');
 
-		counch = new FlxSprite().loadGraphic(File.image('counch'));
-		add(counch);
+			if (asset.contains('_anim'))
+				animated = true;
 
-		// the x and y is the START positions
+			var sprite:FlxSprite = new FlxSprite();
+			sprite.loadGraphic('assets/images/stage/' + asset, animated, 16, 16);
+			sprite.ID = i + 1 + i;
+			var spriteID2:Int = i;
+
+			trace('assets/images/stage/' + asset);
+
+			try
+			{
+				// why did u have to take so long
+				setPosition(sprite, offset(spriteID2), offset(sprite.ID));
+			}
+			catch (e)
+			{
+				setPosition(sprite, 0, 0);
+			}
+			try
+			{
+				setSize(sprite, size(spriteID2));
+			}
+			catch (e)
+			{
+				setSize(sprite, 2);
+			}
+
+			sprite.ID = i;
+
+			backgroundGrp.add(sprite);
+		}
+
+		add(backgroundGrp);
+
 		nala = new FlxSprite(nalaSetting(1), nalaSetting(2)).loadGraphic(File.image('nala'), true, 16, 16);
 		nala.animation.add('idle', [0]);
 		nala.animation.add('jump', [1]);
@@ -103,18 +146,39 @@ class PlayState extends FlxState
 
 		setSize(net, 0);
 
-		setPosition(floor, offset(2), offset(3));
-		setSize(floor, size(1));
-
-		setPosition(counch, offset(), offset(1));
-		setSize(counch, size(0));
-
 		setSize(nala, nalaSetting(0));
 
 		offsets = readFile('stage');
 		sizes = readFile('size');
 		nalaSettings = readFile('nalaSettings');
 		scoreFile = readFile('scoreSettings');
+
+		backgroundGrp.forEach(function(sprite:FlxSprite)
+		{
+			var spriteID2:Int = sprite.ID;
+
+			sprite.ID = sprite.ID + 1 + sprite.ID;
+
+			try
+			{
+				setSize(sprite, size(spriteID2));
+			}
+			catch (e)
+			{
+				setSize(sprite, 2);
+			}
+
+			try
+			{
+				setPosition(sprite, offset(spriteID2), offset(sprite.ID));
+			}
+			catch (e)
+			{
+				setPosition(sprite, 0, 0);
+			}
+
+			sprite.ID = spriteID2;
+		});
 
 		if (!pressedNala)
 		{
@@ -124,7 +188,11 @@ class PlayState extends FlxState
 
 			time();
 
-			FlxTween.tween(nala, {x: FlxG.random.int(0, FlxG.width), y: nalaSetting(2)}, FlxG.random.float(0.1, 0.4), {
+			var nalaNewPos:Int = FlxG.random.int(0, FlxG.width);
+
+			nala.flipX = nalaNewPos > nala.x;
+
+			FlxTween.tween(nala, {x: nalaNewPos, y: nalaSetting(2)}, FlxG.random.float(nalaSetting(3), nalaSetting(4)), {
 				onComplete: function(twn:FlxTween)
 				{
 					nala.animation.play('idle');

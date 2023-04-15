@@ -9,11 +9,14 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;
 import haxe.Json;
 import openfl.Assets;
+
+using StringTools;
+
+#if !web
 import openfl.net.FileReference;
 import sys.FileSystem;
 import sys.io.File as SysFile;
-
-using StringTools;
+#end
 
 class PlayState extends FlxState
 {
@@ -79,8 +82,10 @@ class PlayState extends FlxState
 		net.setGraphicSize(Std.int(net.width * pixelZoom), Std.int(net.height * pixelZoom));
 		add(net);
 
+		#if !web
 		hiScore = new FlxText(20, 0, 0, Std.string(highScore), 16);
 		add(hiScore);
+		#end
 
 		scoreT = new FlxText(20, 40, 0, Std.string(score), 16);
 		add(scoreT);
@@ -98,7 +103,9 @@ class PlayState extends FlxState
 	{
 		reset.visible = canReset;
 
+		#if !web
 		hiScore.text = Std.string(highScore);
+		#end
 		scoreT.text = Std.string(score);
 
 		FlxG.mouse.visible = false;
@@ -115,10 +122,12 @@ class PlayState extends FlxState
 		nala.setGraphicSize(Std.int(nala.width * (pixelZoom + Std.parseFloat(nalaSettings[0]))),
 			Std.int(nala.height * (pixelZoom + Std.parseFloat(nalaSettings[0]))));
 
+		#if !web
 		offsets = coolTextFile(File.data('stage'));
 		sizes = coolTextFile(File.data('size'));
 		nalaSettings = coolTextFile(File.data('nalaSettings'));
 		scoreFile = coolTextFile(File.data('scoreSettings'));
+		#end
 
 		if (!pressedNala)
 		{
@@ -151,6 +160,7 @@ class PlayState extends FlxState
 		{
 			canReset = true;
 
+			#if !web
 			if (score < highScore)
 				highScore = score;
 
@@ -158,6 +168,7 @@ class PlayState extends FlxState
 			{
 				SysFile.saveContent('assets/data/scoreSettings.txt', Std.string(nala.x + '\n' + nala.y + '\n' + highScore));
 			}
+			#end
 
 			nala.setPosition(Std.parseFloat(scoreFile[0]), Std.parseFloat(scoreFile[1]));
 			nala.animation.play('idle');

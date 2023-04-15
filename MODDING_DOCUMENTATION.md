@@ -1,4 +1,5 @@
 # Table of Contents
+- [Main Menu - Options](#main-menu---options)
 - [Nala - Settings](#nala---settings)
 - [Nala - Assets](#nala---assets)
 - [Stages - Layers](#stages---layers)
@@ -6,6 +7,9 @@
   - [Sizes](#sizes)
   - [Positions](#positions)
 - [Stages - Animated](#stages---animated)
+
+# Main Menu - Options
+There was MEANT to be some mod support for this but there is this thing called `scope-creep`.
 
 # Nala - Settings
 In the `assets/data` folder, there is a file called `nalaSettings`, this is where you can modify the cat (or whatever you want your player to try and catch) settings, the size, start position, and the min and max speed.

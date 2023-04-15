@@ -18,6 +18,9 @@ import sys.io.File as SysFile;
 
 class PlayState extends FlxState
 {
+	// unused
+	var speedrunTimer:Float = 0;
+
 	var backgroundGrp:FlxTypedGroup<FlxSprite>;
 
 	var net:FlxSprite;
@@ -119,7 +122,7 @@ class PlayState extends FlxState
 		scoreT = new FlxText(20, 40, 0, Std.string(score), 16);
 		add(scoreT);
 
-		reset = new FlxText(0, 0, 0, 'PRESS R TO RESET', 32);
+		reset = new FlxText(0, 0, 0, 'PRESS R TO RESET\nPRESS ESCAPE TO GO TO THE MAIN MENU', 32);
 		reset.visible = canReset;
 		reset.screenCenter();
 		reset.color = 0xff0000;
@@ -219,8 +222,12 @@ class PlayState extends FlxState
 			{
 				if (FlxG.keys.justReleased.R)
 					FlxG.resetState();
+				if (FlxG.keys.justReleased.ESCAPE)
+					FlxG.switchState(new MenuState());
 			}
 		}
+
+		speedrunTimer += 0.1;
 
 		super.update(elapsed);
 	}

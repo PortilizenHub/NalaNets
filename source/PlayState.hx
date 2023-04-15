@@ -5,6 +5,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.tweens.FlxTween;
+import flixel.util.FlxTimer;
 import openfl.Assets;
 
 using StringTools;
@@ -20,6 +21,8 @@ class PlayState extends FlxState
 	var offsets:Array<String> = coolTextFile(File.data('stage'));
 	var sizes:Array<String> = coolTextFile(File.data('size'));
 	var nalaSettings:Array<String> = coolTextFile(File.data('nalaSettings'));
+
+	var pressedNala:Bool = false;
 
 	var pixelZoom:Int = 4;
 
@@ -77,32 +80,26 @@ class PlayState extends FlxState
 		sizes = coolTextFile(File.data('size'));
 		nalaSettings = coolTextFile(File.data('nalaSettings'));
 
-		if (nalaRandom == 0)
+		if (!pressedNala)
+			pressedNala = FlxG.mouse.pressed && mouseOverlapObject(nala);
+
+		if (!pressedNala)
 		{
-			nala.flipX = false;
-			nala.animation.play('jump');
-
-			FlxTween.tween(nala, {x: 420, y: 266}, 0.8);
-
-			nala.animation.play('idle');
-
-			nalaRandom = 1;
-		}
-		else if (nalaRandom == 1)
-		{
-			nala.animation.play('jump');
-
-			if (nala.x == 420 && nala.y == 266)
-				nala.flipX = true;
-
-			FlxTween.tween(nala, {x: Std.parseFloat(nalaSettings[1]), y: Std.parseFloat(nalaSettings[2])}, 0.8);
-
-			nala.animation.play('idle');
-
-			nalaRandom = 3;
+			FlxTween.tween(nala, {x: FlxG.random.int(0, FlxG.width), y: Std.parseFloat(nalaSettings[2])}, FlxG.random.float(0.1, 2), {
+				onComplete: function(twn:FlxTween)
+				{
+					nala.animation.play('idle');
+				}
+			});
 		}
 		else
-			nalaRandom = 0;
+		{
+			// trace('WINNER');
+			// Sys.exit(0);
+			nala.animation.play('idle');
+		}
+
+		// trace(pressedNala);
 
 		// net.animation.play(Std.string(mouseOverlapObject(floor) || mouseOverlapObject(counch)));
 
@@ -123,7 +120,6 @@ class PlayState extends FlxState
 		return daList;
 	}
 
-	// this is unused to to not working
 	public function mouseOverlapObject(obj:FlxBasic)
 	{
 		return net.overlaps(obj);

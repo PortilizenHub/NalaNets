@@ -122,10 +122,9 @@ class PlayState extends FlxState
 
 			pressedNala = FlxG.mouse.pressed && mouseOverlapObject(nala);
 
-			time()
-			l
+			time();
 
-			FlxTween.tween(nala, {x: FlxG.random.int(0, FlxG.width), y: nalaSetting(2)}, FlxG.random.float(0.1, 2), {
+			FlxTween.tween(nala, {x: FlxG.random.int(0, FlxG.width), y: nalaSetting(2)}, FlxG.random.float(0.1, 0.4), {
 				onComplete: function(twn:FlxTween)
 				{
 					nala.animation.play('idle');
@@ -144,9 +143,10 @@ class PlayState extends FlxState
 			{
 				SysFile.saveContent('assets/data/scoreSettings.txt', Std.string(nala.x + '\n' + nala.y + '\n' + highScore));
 			}
-			#end
 
 			setPosition(nala, scoreFiles(0), scoreFiles(1));
+			#end
+
 			nala.animation.play('idle');
 
 			if (canReset)

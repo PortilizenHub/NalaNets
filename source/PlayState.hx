@@ -85,7 +85,7 @@ class PlayState extends FlxState
 		scoreT = new FlxText(20, 40, 0, Std.string(score), 16);
 		add(scoreT);
 
-		reset = new FlxText(0, 0, 0, 'PRESS R TO RESET');
+		reset = new FlxText(0, 0, 0, 'PRESS R TO RESET', 32);
 		reset.visible = canReset;
 		reset.screenCenter();
 		reset.color = 0xff0000;
@@ -154,13 +154,16 @@ class PlayState extends FlxState
 		{
 			canReset = true;
 
-			nala.setPosition(Std.parseFloat(scoreFile[0]), Std.parseFloat(scoreFile[1]));
-			nala.animation.play('idle');
-
 			if (FileSystem.exists('assets/data'))
 			{
 				SysFile.saveContent('assets/data/scoreSettings.txt', Std.string(nala.x + '\n' + nala.y + '\n' + highScore));
 			}
+
+			nala.setPosition(Std.parseFloat(scoreFile[0]), Std.parseFloat(scoreFile[1]));
+			nala.animation.play('idle');
+
+			if (score > highScore)
+				highScore = score;
 
 			if (canReset)
 			{
